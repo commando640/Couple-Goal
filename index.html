@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slow Romantic Night</title>
+<style>
+    :root {
+        --bg: radial-gradient(circle at bottom, #1a1a2e, #05050a);
+    }
+    body {
+        margin: 0; overflow: hidden; height: 100vh;
+        background: var(--bg);
+        display: flex; justify-content: center; align-items: center;
+        perspective: 1000px; transition: 2s; font-family: 'Georgia', serif;
+    }
+    .day { --bg: linear-gradient(to top, #ffafbd, #ffc3a0); }
+    
+    /* Slow & Soft Rain */
+    .rain {
+        position: absolute; width: 1px; height: 40px;
+        background: linear-gradient(transparent, rgba(255, 255, 255, 0.15));
+        top: -100px; pointer-events: none;
+        animation: fall-rain 4s linear infinite; /* Timing increased to 4s for slow effect */
+    }
+    @keyframes fall-rain { to { transform: translateY(115vh); } }
+
+    /* Tree Styling */
+    .tree-container { position: relative; cursor: pointer; z-index: 10; filter: drop-shadow(0 0 20px rgba(0,0,0,0.8)); }
+    .tree {
+        font-size: 160px; 
+        animation: slow-sway 6s ease-in-out infinite alternate;
+        transition: 0.8s;
+    }
+    .glow .tree { filter: drop-shadow(0 0 40px #ff69b4); transform: scale(1.02); }
+
+    @keyframes slow-sway { 0% { transform: rotate(-0.5deg); } 100% { transform: rotate(0.5deg); } }
+
+    /* Slow Falling Particles */
+    .particle { position: absolute; pointer-events: none; animation: slow-fall linear forwards; filter: blur(0.5px); }
+    @keyframes slow-fall {
+        0% { transform: translateY(-50px) rotate(0deg) translateX(0); opacity: 0; }
+        10% { opacity: 0.8; }
+        100% { transform: translateY(100vh) rotate(360deg) translateX(30px); opacity: 0; }
+    }
+
+    .love-text {
+        position: absolute; bottom: 18%; color: #fff;
+        font-style: italic; font-size: 24px; text-align: center;
+        width: 100%; text-shadow: 0 0 20px rgba(255,182,193,0.9);
+        animation: softFade 5s ease-in-out forwards;
+        letter-spacing: 1px;
+    }
+    @keyframes softFade { 0% { opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-20px); } }
+
+    .toggle-btn {
+        position: absolute; top: 25px; right: 25px; padding: 10px 22px;
+        background: rgba(255,255,255,0.05); backdrop-filter: blur(15px);
+        color: rgba(255,255,255,0.8); border: 0.5px solid rgba(255,255,255,0.2);
+        border-radius: 40px; cursor: pointer; z-index: 100; font-size: 13px;
+    }
+</style>
+</head>
+<body onload="startSlowRain()">
+
+<div id="rain-container"></div>
+<div class="toggle-btn" onclick="toggleMode()">🌙 Calm Mode</div>
+
+<div class="tree-container" id="container" onclick="bloom()">
+    <div class="tree" id="tree">🌳</div>
+</div>
+
+<script>
+function startSlowRain() {
+    const container = document.getElementById("rain-container");
+    // Reduced drop count for a cleaner, calmer look
+    for(let i=0; i<60; i++) {
+        let drop = document.createElement("div");
+        drop.className = "rain";
+        drop.style.left = Math.random() * 100 + "vw";
+        drop.style.animationDuration = (Math.random() * 2 + 3) + "s"; // 3s to 5s range
+        drop.style.animationDelay = Math.random() * 4 + "s";
+        drop.style.opacity = Math.random() * 0.5;
+        container.appendChild(drop);
+    }
+}
+
+function toggleMode() { document.body.classList.toggle("day"); }
+
+function bloom() {
+    const container = document.getElementById("container");
+    container.classList.add("glow");
+    
+    // Slow Falling Petals
+    for(let i = 0; i < 15; i++) {
+        createParticle(i % 2 === 0 ? "🌸" : "✨");
+    }
+
+    const messages = [
+        "In this silence, I hear only your heart. 🤍",
+        "Slowly, like rain, I fell for you. 🌧️",
+        "Every second with you is a lifetime of peace. ✨",
+        "You are my favorite kind of serenity. 🌊",
+        "Let the world rush, we have forever. ♾️",
+        "Your love is the calmest storm I've ever known. 🌹",
+        "The moon is beautiful, isn't it? 🌙"
+    ];
+
+    const textEl = document.createElement("div");
+    textEl.className = "love-text";
+    textEl.innerText = messages[Math.floor(Math.random()*messages.length)];
+    document.body.appendChild(textEl);
+
+    setTimeout(() => {
+        container.classList.remove("glow");
+        textEl.remove();
+    }, 5000);
+}
+
+function createParticle(symbol) {
+    const p = document.createElement("div");
+    p.className = "particle";
+    p.innerHTML = symbol;
+    p.style.left = Math.random() * 100 + "vw";
+    p.style.fontSize = (Math.random() * 15 + 10) + "px";
+    const duration = Math.random() * 4 + 6; // Very slow fall (6s to 10s)
+    p.style.animationDuration = duration + "s";
+    p.style.animationDelay = Math.random() * 0.5 + "s";
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), duration * 1000);
+}
+</script>
+</body>
+</html>
